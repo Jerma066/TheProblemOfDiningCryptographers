@@ -5,6 +5,7 @@
 #include <QThread>
 
 #include "tcpsocketreader.h"
+#include "tcpsocketwriter.h"
 #include "logterminal.h"
 #include "settingsdialog.h"
 
@@ -23,6 +24,7 @@ public:
 private:
     Ui::MainWindow *ui;
     TcpSocketReader *SocketReader = new TcpSocketReader();
+    TcpSocketWriter *SocketWriter = new TcpSocketWriter();
 };
 
 #endif // MAINWINDOW_H

@@ -30,13 +30,16 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         settingsdialog.cpp \
-        tcpsocketreader.cpp
+        tcpsocketreader.cpp \
+        tcpsocketwriter.cpp
 
 HEADERS += \
+        generic.h \
         logterminal.h \
         mainwindow.h \
         settingsdialog.h \
-        tcpsocketreader.h
+        tcpsocketreader.h \
+        tcpsocketwriter.h
 
 FORMS += \
         logterminal.ui \

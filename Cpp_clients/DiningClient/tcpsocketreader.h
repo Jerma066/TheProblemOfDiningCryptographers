@@ -7,6 +7,8 @@
 #include <QTcpServer>
 #include <QDateTime>
 
+#include "generic.h"
+
 class TcpSocketReader: public QObject
 {
     Q_OBJECT
@@ -32,7 +34,7 @@ private:
 
     //Атрибуты сервера
     QHostAddress host = QHostAddress::Any;
-    quint16 port = 9191;
+    quint16 port = DEFAULT_PORT;
 
 };
 

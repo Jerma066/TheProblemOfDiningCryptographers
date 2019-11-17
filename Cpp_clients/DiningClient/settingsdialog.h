@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QNetworkInterface>
 
+#include <generic.h>
+
 namespace Ui {
 class SettingsDialog;
 }
