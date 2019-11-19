@@ -1,0 +1,6 @@
+self_parameters:
+    port: 9192
+    address: '127.0.0.1'
+    num_of_cryptographers: 3
+    reply_message:  "Hey! Bro, your number is "
+    receive_message: "Hey! Bro, what is my number?"
