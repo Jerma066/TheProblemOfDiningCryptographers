@@ -18,7 +18,7 @@ void TcpSocketWriter::process_SocketReader()
     socket = new QTcpSocket(this);
 
 
-    writeDataToUser(LOOP_BACK_ADDRESS, DEFAULT_PORT, "Hey!");         //Проверка
+    writeDataToUser(LOOP_BACK_ADDRESS, DEFAULT_PORT, "Hey! Bro, what is my number?");         //Проверка
 }
 
 bool TcpSocketWriter::connectToUser(QString host, quint16 port)
