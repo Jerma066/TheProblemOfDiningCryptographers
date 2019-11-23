@@ -21,6 +21,11 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void CaughtSelfDescriptionNumber(int);
+
+signals:
+
 private:
     Ui::MainWindow *ui;
     TcpSocketReader *SocketReader = new TcpSocketReader();

@@ -22,10 +22,8 @@ private slots:
     void on_closeButton_clicked();                 //Слот обработки нажатия кнопки close
     void printSendedData(QByteArray data);         //Слот отображения отправленных данных в поле терминала
     void printReceivedData(QString data);          //Слот отображения принятых данных в поле терминала
-
-
+    void printSentData(QString sended_data);       //Слот отображения отправленных данных в поле терминала
     void on_cls1Button_clicked();
-
     void on_cls2Button_clicked();
 
 private:

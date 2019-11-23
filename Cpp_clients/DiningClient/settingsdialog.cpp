@@ -20,9 +20,10 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     }
 
 
-    ui->selfPortLineEdit->setText("9191");                    // Собственный номер порта:
-    ui->serverIpAddressLineEdit->setText(LOOP_BACK_ADDRESS);  // Cерверный IP адресс
-    ui->serverPortLineEdit->setText("8888");                  // Серверный номер порта
+    ui->selfPortLineEdit->setText(QString::number(DEFAULT_SELF_PORT));          // Собственный номер порта:
+    ui->serverIpAddressLineEdit->setText(LOOP_BACK_ADDRESS);                    // Cерверный IP адресс
+    ui->serverPortLineEdit->setText(QString::number(DEFAULT_SERVER_PORT));      // Серверный номер порта
+
 }
 
 SettingsDialog::~SettingsDialog()
@@ -42,10 +43,11 @@ void SettingsDialog::on_applyButton_clicked()
 
     //Заполнение атрибутов собственого сокета и серерного сокета
     selfSocket.first = ui->selfIpAddressLineEdit->text();
-    selfSocket.second =std::atoi(ui->selfPortLineEdit->text().toLocal8Bit());
+    selfSocket.second = quint16(std::atoi(ui->selfPortLineEdit->text().toLocal8Bit()));
     serverSocket.first = ui->serverIpAddressLineEdit->text();
-    serverSocket.second =std::atoi(ui->serverPortLineEdit->text().toLocal8Bit());
+    serverSocket.second =quint16(std::atoi(ui->serverPortLineEdit->text().toLocal8Bit()));
 
+    setConnectionParameters(selfSocket, serverSocket);
 
     SettingsDialog::hide();
 }

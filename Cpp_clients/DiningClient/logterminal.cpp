@@ -41,6 +41,13 @@ void LogTerminal::printReceivedData(QString data)
     ui->receivingTextEdit->moveCursor(QTextCursor::End);
 }
 
+void LogTerminal::printSentData(QString sended_data)
+{
+    ui->sendingTextEdit->textCursor().insertText(sended_data);
+    ui->sendingTextEdit->textCursor().insertText("\n");
+    ui->sendingTextEdit->moveCursor(QTextCursor::End);
+}
+
 //Oчищеия консолей
 void LogTerminal::on_cls1Button_clicked()
 {

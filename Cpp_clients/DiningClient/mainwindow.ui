@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>338</width>
-    <height>253</height>
+    <width>581</width>
+    <height>484</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,17 @@
         </property>
        </spacer>
       </item>
+      <item>
+       <widget class="QPushButton" name="startProtocolButton">
+        <property name="text">
+         <string>Start Protocol</string>
+        </property>
+       </widget>
+      </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="protocolStagesTextEdit"/>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -70,7 +80,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>338</width>
+     <width>581</width>
      <height>25</height>
     </rect>
    </property>

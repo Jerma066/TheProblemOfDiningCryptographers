@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QNetworkInterface>
+#include <tuple>
 
 #include <generic.h>
 
@@ -24,11 +25,13 @@ public slots:
 private slots:
     void on_applyButton_clicked();
 
+signals:
+    void setConnectionParameters(QPair<QString, quint16> selfSettings, QPair<QString, quint16> serverSettings);
+
 private:
     Ui::SettingsDialog *ui;
-    QPair<QString,  int> selfSocket;
-    QPair<QString,  int> serverSocket;
-
+    QPair<QString,  quint16> selfSocket;
+    QPair<QString,  quint16> serverSocket;
 
 };
 
