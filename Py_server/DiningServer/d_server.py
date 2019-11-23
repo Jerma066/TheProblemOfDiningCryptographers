@@ -1,4 +1,5 @@
 import asyncio
+import socket
 import yaml
 
 CONFIG_NAME = "сonfig.yaml"
@@ -9,17 +10,22 @@ class DiningServer:
         with open(CONFIG_NAME) as f:
             cfg = yaml.load(f)
 
-        self.ip_address = cfg['self_parameters']['address']
-        self.port = cfg['self_parameters']['port']
+        self.ip_address = socket.gethostbyname(socket.getfqdn())
+        self.port_for_writing = cfg['self_parameters']['port_for_writing']
+        self.port = cfg['self_parameters']['port_for_reading']
         self.num_of_cryptographers = cfg['self_parameters']['num_of_cryptographers']
         self.answer_str = cfg['self_parameters']['reply_message']
         self.key_words = cfg['self_parameters']['receive_message']
         self.map_of_guests = {}
         self.current_number = 1
+        self.num_code = cfg['client_parameters']['send_number_code']
+        self.map_code = cfg['client_parameters']['send_map_code']
 
         self.loop = asyncio.get_event_loop()
         corut = asyncio.start_server(self.read_data_from_socket, self.ip_address, self.port, loop=self.loop)
         self.server = self.loop.run_until_complete(corut)
+
+        print(socket.gethostbyname(socket.getfqdn()))
 
         try:
             self.loop.run_forever()
@@ -34,13 +40,14 @@ class DiningServer:
         message = data.decode()
         address = writer.get_extra_info("peername")
 
-        current_address = address
+        current_address = address[0]
 
         if message == self.key_words:
             if current_address not in self.map_of_guests:
                 self.map_of_guests[current_address] = self.current_number
-                answer = self.answer_str + str(self.current_number)
-                writer.write(answer.encode())
+                answer = str(self.num_code) + ' ' + str(self.current_number)
+
+                self.send_answer_to_user(answer, current_address)
 
                 self.current_number += 1
                 print(self.map_of_guests)
@@ -52,17 +59,18 @@ class DiningServer:
 
         writer.close()
 
-    def stop_reading(self):
-        print(self.map_of_guests)
-        """
-        Нужен код, котрый преобразует map_of_guests в формат, 
-        который будет удобен для использования пользвоателям.
-        
-        После чего нужно разослать всем адресам из  map_of_guests
-        полученное сообщение, чтобы они имели у себя такой словарь
-        """
-        raise KeyboardInterrupt
+    def send_answer_to_user(self, answer, host):
+        sock = socket.create_connection((host, self.port_for_writing))
+        sock.sendall(answer.encode())
+        sock.close()
 
+    def stop_reading(self):
+        for address in self.map_of_guests:
+            answer = str(self.map_code) + ' ' +str(self.map_of_guests)
+            self.send_answer_to_user(address, answer)
+
+        print(self.map_of_guests)
+        raise KeyboardInterrupt
 
 if __name__ == '__main__':
     server = DiningServer()
