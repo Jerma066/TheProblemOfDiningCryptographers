@@ -89,7 +89,7 @@ bool TcpSocketReader::Process_Message(QString data)
             return true;
         }
         case 3771:{
-            QMap<int, QString> user_addresses;
+            QMap<int, QString> users_addresses;
 
             int num_of_items = command_data.count(':');
             for (int i = 0; i < num_of_items; i++){
@@ -113,9 +113,11 @@ bool TcpSocketReader::Process_Message(QString data)
                 QString descriptor = command_data.mid(i_desc_from + 1,
                                                       i_desc_to - i_desc_from - 1);
 
-                user_addresses[descriptor.toInt()] = address;
+                adresses_descriptions[address] = descriptor.toInt();
+                users_addresses[descriptor.toInt()] = address;
             }
 
+            gotDescriptionsOfGuests(users_addresses);
             return true;
         }
         default:{

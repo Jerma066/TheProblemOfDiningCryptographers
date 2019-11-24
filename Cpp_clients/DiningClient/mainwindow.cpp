@@ -7,8 +7,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //Необходимо для отправки типа QPair с использованием сигналов
+    //Необходимо для отправки типа QPair QMap<int, QString> с использованием сигналов
     qRegisterMetaType< QPair<QString, quint16> >("QPair<QString, quint16>");
+    qRegisterMetaType< QMap<int, QString> >("QMap<int, QString>");
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~ Объявление потока чтения данных из TcpSocet ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -26,6 +27,14 @@ MainWindow::MainWindow(QWidget *parent) :
         //Получение номера-дескриптора клиента
         connect(SocketReader, SIGNAL(gotSelfDescriptionNumber(int)), SocketWriter, SLOT(CaughtSelfDescriptionNumber(int)));
         connect(SocketReader, SIGNAL(gotSelfDescriptionNumber(int)), this, SLOT(CaughtSelfDescriptionNumber(int)));
+
+        //Получение словаря дескриптор-адресов
+        connect(SocketReader, SIGNAL(gotDescriptionsOfGuests(QMap<int, QString>)),
+                SocketWriter, SLOT(CaughtDescriptionsOfGuests(QMap<int, QString>)));
+
+        connect(SocketReader, SIGNAL(gotDescriptionsOfGuests(QMap<int, QString>)),
+                this, SLOT(CaughtDescriptionsOfGuests(QMap<int, QString>)));
+
 
         //Запуск потока
         thread_TcpSocketReader->start();
@@ -75,12 +84,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::CaughtSelfDescriptionNumber(int numberDescriptor)
 {
-    QString service_str = "[PROTOCOL_STEP  ]";
-    QString step_descriptor_str = " <<Number assignment>> ";
+    QString step_descriptor_str = " Your place at the table: ";
 
-    ui->protocolStagesTextEdit->textCursor().insertText(service_str + step_descriptor_str + QString::number(numberDescriptor));
+    ui->protocolStagesTextEdit->textCursor().insertText(SERVICE_STR + step_descriptor_str + QString::number(numberDescriptor));
     ui->protocolStagesTextEdit->textCursor().insertText("\n");
     ui->protocolStagesTextEdit->moveCursor(QTextCursor::End);
+}
 
-    qDebug() << numberDescriptor;
+void MainWindow::CaughtDescriptionsOfGuests(QMap<int, QString> users_descriptions)
+{
+    descriptors_adresses = users_descriptions;
+
+    QString step_descriptor_str = " Server falls asleep: ";
+
+    ui->protocolStagesTextEdit->textCursor().insertText(SERVICE_STR + step_descriptor_str + "Cryptographers wake up!");
+    ui->protocolStagesTextEdit->textCursor().insertText("\n");
+    ui->protocolStagesTextEdit->moveCursor(QTextCursor::End);
 }

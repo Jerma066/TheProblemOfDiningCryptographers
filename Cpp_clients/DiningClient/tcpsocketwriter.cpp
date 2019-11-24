@@ -74,21 +74,28 @@ void TcpSocketWriter::CaughtSelfDescriptionNumber(int number)
     selfDescriptionNumber = number;
 }
 
+void TcpSocketWriter::CaughtDescriptionsOfGuests(QMap<int, QString> users_descriptions)
+{
+    haveAddressesMap = true;
+    descriptors_adresses = users_descriptions;
+}
+
 void TcpSocketWriter::GetNumber()
 {
     auto host = serverSocket.first;
     auto port = serverSocket.second;
 
-    //while(!haveNumber){
+    while(!haveNumber){
         connectToUser(host, port);
 
         writeData(GETTING_NUMBER_STR);
+        exportData(GETTING_NUMBER_STR);
 
         QGuiApplication::processEvents();
         disconnecFromUser();
 
         delay(50);
-    //}
+    }
 }
 
 //-----------------Временной интервал--------------------------------------//

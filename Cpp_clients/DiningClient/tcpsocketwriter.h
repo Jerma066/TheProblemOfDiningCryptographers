@@ -27,6 +27,7 @@ public slots:
     bool writeDataToUser(QString host, quint16 port, QByteArray data);
     void SetConnectionParameters(QPair<QString, quint16> selfSettings, QPair<QString, quint16> serverSettings);
     void CaughtSelfDescriptionNumber(int);
+    void CaughtDescriptionsOfGuests(QMap<int, QString> users_descriptions);
 
 private slots:
     bool connectToUser(QString host, quint16 port);
@@ -40,8 +41,10 @@ public:
 private:
     QTcpSocket *socket;
     bool haveNumber = false;
-    int selfDescriptionNumber = NULL;
+    bool haveAddressesMap = false;
+    int selfDescriptionNumber;
     QPair<QString, quint16> serverSocket;
+    QMap<int, QString> descriptors_adresses;
 
 };
 

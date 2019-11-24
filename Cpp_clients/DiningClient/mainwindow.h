@@ -23,6 +23,7 @@ public:
 
 public slots:
     void CaughtSelfDescriptionNumber(int);
+    void CaughtDescriptionsOfGuests(QMap<int, QString> users_descriptions);
 
 signals:
 
@@ -30,6 +31,7 @@ private:
     Ui::MainWindow *ui;
     TcpSocketReader *SocketReader = new TcpSocketReader();
     TcpSocketWriter *SocketWriter = new TcpSocketWriter();
+    QMap<int, QString> descriptors_adresses;
 };
 
 #endif // MAINWINDOW_H
