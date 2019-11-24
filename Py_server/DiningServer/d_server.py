@@ -14,7 +14,6 @@ class DiningServer:
         self.port_for_writing = cfg['self_parameters']['port_for_writing']
         self.port = cfg['self_parameters']['port_for_reading']
         self.num_of_cryptographers = cfg['self_parameters']['num_of_cryptographers']
-        self.answer_str = cfg['self_parameters']['reply_message']
         self.key_words = cfg['self_parameters']['receive_message']
         self.map_of_guests = {}
         self.current_number = 1
@@ -66,11 +65,15 @@ class DiningServer:
 
     def stop_reading(self):
         for address in self.map_of_guests:
-            answer = str(self.map_code) + ' ' +str(self.map_of_guests)
-            self.send_answer_to_user(address, answer)
+
+            answer = str(self.map_code) + ' ' + str(self.map_of_guests)
+            print(address)
+            print(answer)
+            self.send_answer_to_user(answer, address)
 
         print(self.map_of_guests)
         raise KeyboardInterrupt
+
 
 if __name__ == '__main__':
     server = DiningServer()
