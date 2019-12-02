@@ -16,7 +16,7 @@ class DiningServer:
         self.num_of_cryptographers = cfg['self_parameters']['num_of_cryptographers']
         self.key_words = cfg['self_parameters']['receive_message']
         self.map_of_guests = {}
-        self.current_number = 1
+        self.current_number = 0
         self.num_code = cfg['client_parameters']['send_number_code']
         self.map_code = cfg['client_parameters']['send_map_code']
 
