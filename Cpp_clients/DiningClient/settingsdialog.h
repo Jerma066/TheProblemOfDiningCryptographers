@@ -24,9 +24,13 @@ public slots:
 
 private slots:
     void on_applyButton_clicked();
+    void SetScoreParameters();
+
+    void on_scoreComboBox_activated(const QString &arg1);
 
 signals:
     void setConnectionParameters(QPair<QString, quint16> selfSettings, QPair<QString, quint16> serverSettings);
+    void paymentSignal(bool);
 
 private:
     Ui::SettingsDialog *ui;

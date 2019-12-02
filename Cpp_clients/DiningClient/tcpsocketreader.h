@@ -22,13 +22,17 @@ public slots:
     void process_SocketReader();
     void NewUser();
     void ReadFromSocket();
-    bool Process_Message(QString data);
+    void Process_Message(QString data);
+    QString ConvertFromIPv6ToIpv4(QHostAddress address);
 
 signals:
     void finished_SocketReader();
     void outSocket(QString sended_data);
     void gotSelfDescriptionNumber(int number);
     void gotDescriptionsOfGuests(QMap<int, QString>);
+    void gotSideXorResult(int senderDescriptor, int value);
+    void gotSideSecret(int senderDescriptor, int value);
+
 
 private:
     QByteArray data;
@@ -41,7 +45,7 @@ private:
     bool clientHaveNumber = false;
     int selfDescriptionNumber;
     QMap<QString, int> adresses_descriptions;
-
+    QString currentSenderIPv4Addr;
 };
 
 #endif // TCPSOCKEREADER_H

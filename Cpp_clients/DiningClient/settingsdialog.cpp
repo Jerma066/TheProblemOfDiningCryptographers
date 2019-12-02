@@ -7,7 +7,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->setWindowTitle("Settings of connection");
+    this->setWindowTitle("Settings of protocol");
 
     //-----Дефолтные значения-----//
     const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
@@ -24,12 +24,34 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->serverIpAddressLineEdit->setText(LOOP_BACK_ADDRESS);                    // Cерверный IP адресс
     ui->serverPortLineEdit->setText(QString::number(DEFAULT_SERVER_PORT));      // Серверный номер порта
 
+    SetScoreParameters();
 }
 
 SettingsDialog::~SettingsDialog()
 {
     delete ui;
 }
+
+void SettingsDialog::SetScoreParameters()
+{
+    ui->scoreComboBox->addItem("NO");
+    ui->scoreComboBox->addItem("YES");
+
+    paymentSignal(false);
+}
+
+void SettingsDialog::on_scoreComboBox_activated(const QString &arg1)
+{
+    if(arg1.contains("YES"))
+    {
+        paymentSignal(true);
+    }
+    else if (arg1.contains("NO"))
+    {
+        paymentSignal(false);
+    }
+}
+
 
 void SettingsDialog::showSettingsDialog()
 {

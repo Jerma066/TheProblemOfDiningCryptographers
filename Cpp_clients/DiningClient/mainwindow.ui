@@ -20,7 +20,7 @@
       <item>
        <widget class="QPushButton" name="set_of_conButton">
         <property name="text">
-         <string>Settings of connection</string>
+         <string>Settings of protocol</string>
         </property>
        </widget>
       </item>

@@ -29,6 +29,7 @@ SOURCES += \
         logterminal.cpp \
         main.cpp \
         mainwindow.cpp \
+        protocolstages.cpp \
         settingsdialog.cpp \
         tcpsocketreader.cpp \
         tcpsocketwriter.cpp
@@ -37,6 +38,7 @@ HEADERS += \
         generic.h \
         logterminal.h \
         mainwindow.h \
+        protocolstages.h \
         settingsdialog.h \
         tcpsocketreader.h \
         tcpsocketwriter.h

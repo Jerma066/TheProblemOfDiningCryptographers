@@ -24,16 +24,19 @@ signals:
 
 public slots:
     void process_SocketReader();
-    bool writeDataToUser(QString host, quint16 port, QByteArray data);
+    bool writeDataToUser(QString host, quint16 port, QString data);
     void SetConnectionParameters(QPair<QString, quint16> selfSettings, QPair<QString, quint16> serverSettings);
     void CaughtSelfDescriptionNumber(int);
     void CaughtDescriptionsOfGuests(QMap<int, QString> users_descriptions);
+    void ProcessWritingMessage(QString message);
 
 private slots:
     bool connectToUser(QString host, quint16 port);
     void disconnecFromUser();
     bool writeData(QByteArray data);
     void GetNumber();
+    void SecretsFrindlyBroadcast(QVector<int> secrets);
+    void BroadcastMessage(QString message);
 
 public:
     void delay(int millisecondsToWait);

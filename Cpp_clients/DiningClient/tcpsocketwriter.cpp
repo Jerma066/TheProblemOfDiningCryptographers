@@ -39,17 +39,18 @@ bool TcpSocketWriter::writeData(QByteArray data)
         return false;
 }
 
-bool TcpSocketWriter::writeDataToUser(QString host, quint16 port, QByteArray data)
+bool TcpSocketWriter::writeDataToUser(QString host, quint16 port, QString data)
 {
     bool forwarding_state, disconnect_state;
 
     connectToUser(host, port);
-    forwarding_state = writeData(data);
+    forwarding_state = writeData(data.toLocal8Bit());
     disconnecFromUser();
     disconnect_state = (socket->state() == QAbstractSocket::UnconnectedState);
 
     if(forwarding_state & disconnect_state){
-        exportData(data);
+        QString out_message = '[' + host + ']' + data;
+        exportData(out_message);
     }
     else if(!forwarding_state){
         exportData("[ERROR: ] -faied to send data: <<" + data + ">>");
@@ -98,8 +99,38 @@ void TcpSocketWriter::GetNumber()
     }
 }
 
+void TcpSocketWriter::ProcessWritingMessage(QString message)
+{
+    QString command_code = message.left(message.indexOf(' '));
+
+    switch (command_code.toInt()) {
+    case 3141:{
+        BroadcastMessage(message);
+    }
+    }
+}
+
+void TcpSocketWriter::SecretsFrindlyBroadcast(QVector<int> secrets)
+{
+    for (int i = selfDescriptionNumber + 1; i < descriptors_adresses.size(); i++) {
+        QString current_receiver_host = descriptors_adresses[i];
+        QString secret_data = "3140 " + QString::number(secrets[i]);
+        writeDataToUser(current_receiver_host, DEFAULT_SELF_PORT, secret_data);
+    }
+}
+
+void TcpSocketWriter::BroadcastMessage(QString message)
+{
+    for(auto it = descriptors_adresses.begin(); it!=descriptors_adresses.end(); it++){
+        QString host = it.value();
+        if(host != descriptors_adresses[selfDescriptionNumber]){
+            writeDataToUser(host, DEFAULT_SELF_PORT, message);
+        }
+    }
+}
+
+
 //-----------------Временной интервал--------------------------------------//
-//-------------------------------------------------------------------------//
 void TcpSocketWriter::delay(int millisecondsToWait)
 {
     QTime dieTime = QTime::currentTime().addMSecs( millisecondsToWait );

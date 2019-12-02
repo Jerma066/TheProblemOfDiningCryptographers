@@ -2,6 +2,7 @@
 #define GENERIC_H
 
 #include <QMap>
+#include <QVector>
 #include <QDebug>
 
 #define     DEFAULT_SELF_PORT       9192

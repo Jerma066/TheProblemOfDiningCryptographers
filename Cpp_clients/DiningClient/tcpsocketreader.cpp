@@ -28,6 +28,20 @@ void TcpSocketReader::process_SocketReader()
 
 }
 
+//метод Конвертирования
+QString TcpSocketReader::ConvertFromIPv6ToIpv4(QHostAddress address)
+{
+    bool conversionOK = false;
+    QHostAddress ip4Address(address.toIPv4Address(&conversionOK));
+    QString ip4String;
+    if (conversionOK)
+    {
+        ip4String = ip4Address.toString();
+    }
+
+    return ip4String;
+}
+
 void TcpSocketReader::NewUser()
 {
     if(server_status == 1){
@@ -51,12 +65,11 @@ void TcpSocketReader::ReadFromSocket()
     QTextStream os(clientSocket);
 
     data = clientSocket->readAll();
+    currentSenderIPv4Addr = ConvertFromIPv6ToIpv4(clientSocket->peerAddress());
 
     Process_Message(data);
+    outSocket("[" + currentSenderIPv4Addr + "]: " + data);
 
-    outSocket("[" + clientSocket->peerAddress().toString() + "]: " + data);
-
-    // Если нужно закрыть сокет
     clientSocket->close();
 
     qlonglong idusersocs = clientSocket->socketDescriptor();
@@ -76,7 +89,7 @@ bool isDigitalOnly(QString str)
     return true;
 }
 
-bool TcpSocketReader::Process_Message(QString data)
+void TcpSocketReader::Process_Message(QString data)
 {
     QString command_code = data.left(data.indexOf(' '));
     QString command_data = data.mid(data.indexOf( command_code )
@@ -86,7 +99,7 @@ bool TcpSocketReader::Process_Message(QString data)
         switch (command_code.toInt()) {
         case 3770:{
             gotSelfDescriptionNumber(command_data.toInt());
-            return true;
+            break;
         }
         case 3771:{
             QMap<int, QString> users_addresses;
@@ -118,15 +131,25 @@ bool TcpSocketReader::Process_Message(QString data)
             }
 
             gotDescriptionsOfGuests(users_addresses);
-            return true;
+            break;
+        }
+        case 3140:{
+            int sender_descriptor = adresses_descriptions[currentSenderIPv4Addr];
+            int obtained_secret = command_data.toInt();
+            gotSideSecret(sender_descriptor, obtained_secret);
+            break;
+        }
+        case 3141:{
+            int sender_descriptor = adresses_descriptions[currentSenderIPv4Addr];
+            int side_xor_result = command_data.toInt();
+            gotSideXorResult(sender_descriptor, side_xor_result);
+            break;
         }
         default:{
             qDebug() << "Uknown command!";
-            return false;
+            break;
         }
         }
     }
-
-    return false;
 }
 //-------------------------------------------------------------------------------------//

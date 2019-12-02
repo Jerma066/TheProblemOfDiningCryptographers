@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>527</width>
+    <width>700</width>
     <height>163</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
-    <width>527</width>
+    <width>700</width>
     <height>163</height>
    </size>
   </property>
@@ -63,6 +63,12 @@
    </item>
    <item row="0" column="1">
     <widget class="QGroupBox" name="groupBox_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title">
       <string>Server Settings</string>
      </property>
@@ -98,7 +104,32 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
+   <item row="0" column="2">
+    <widget class="QGroupBox" name="payGroupBox">
+     <property name="title">
+      <string>Score</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+          <underline>true</underline>
+         </font>
+        </property>
+        <property name="text">
+         <string>Did you pay?</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="scoreComboBox"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
       <number>7</number>
