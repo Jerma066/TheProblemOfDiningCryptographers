@@ -1,0 +1,13 @@
+release/logterminal.o
+release/main.o
+release/mainwindow.o
+release/protocolstages.o
+release/settingsdialog.o
+release/tcpsocketreader.o
+release/tcpsocketwriter.o
+release/moc_logterminal.o
+release/moc_mainwindow.o
+release/moc_protocolstages.o
+release/moc_settingsdialog.o
+release/moc_tcpsocketreader.o
+release/moc_tcpsocketwriter.o
