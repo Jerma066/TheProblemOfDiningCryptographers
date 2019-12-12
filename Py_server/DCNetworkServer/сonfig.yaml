@@ -1,11 +1,12 @@
 self_parameters:
-    port_for_writing: 9192
-    port_for_reading: 6666
-    num_of_cryptographers: 2
-    about_number_message: "Hey! Bro, what is my number?"
-    broadcast_desire_message: "Hey! Bro, what is my number? I'd like to tell some information to my bros"
+    num_of_cryptographers:          4
+    port_for_writing:               9192
+    port_for_reading:               6666
+    about_number_message:           "Hey! Bro, what is my number?"
+    broadcast_desire_message:       "Hey! Bro, what is my number? I'd like to tell some information to my bros"
 
 client_parameters:
-    send_number_code:   3770
-    send_map_code:      3771
-    send_broadcasting_num_code: 3772
+    send_number_code:               3770
+    send_map_code:                  3771
+    send_broadcasting_num_code:     3772
+    send_number_of_messages:        3773

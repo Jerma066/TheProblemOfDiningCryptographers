@@ -1,8 +1,0 @@
-self_parameters:
-    port_for_writing: 9192
-    port_for_reading: 6666
-    num_of_cryptographers: 3
-    receive_message: "Hey! Bro, what is my number?"
-client_parameters:
-    send_number_code:   3770
-    send_map_code:      3771

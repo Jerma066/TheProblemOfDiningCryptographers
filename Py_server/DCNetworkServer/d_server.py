@@ -24,6 +24,7 @@ class DiningServer:
         self.num_code = cfg['client_parameters']['send_number_code']
         self.map_code = cfg['client_parameters']['send_map_code']
         self.broadcasting_num_code = cfg['client_parameters']['send_broadcasting_num_code']
+        self.num_of_messages = cfg['client_parameters']['send_number_of_messages']
 
         self.loop = asyncio.get_event_loop()
         corut = asyncio.start_server(self.read_data_from_socket, self.ip_address, self.port, loop=self.loop)
@@ -82,17 +83,23 @@ class DiningServer:
         sock.close()
 
     def stop_reading(self):
+        # Рассылка позиций отправки сообщений
         random.shuffle(self.order_messages_list)
         for i in range(len(self.order_messages_list)):
             answer = str(self.broadcasting_num_code) + ' ' + str(i)
             address = self.map_of_descriptors[self.order_messages_list[i]]
             self.send_answer_to_user(answer, address)
 
+        # Рассылка количества сообщений
+        for address in self.map_of_guests:
+            answer = str(self.num_of_messages) + ' ' + str(len(self.order_messages_list))
+            self.send_answer_to_user(answer, address)
+
+        # Рассылка словаря адрессов
         for address in self.map_of_guests:
             answer = str(self.map_code) + ' ' + str(self.map_of_guests)
             self.send_answer_to_user(answer, address)
 
-        print(self.map_of_guests)
         raise KeyboardInterrupt
 
 
