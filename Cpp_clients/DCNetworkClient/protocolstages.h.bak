@@ -1,0 +1,72 @@
+﻿#ifndef PROTOCOLSTAGES_H
+#define PROTOCOLSTAGES_H
+
+#include <QObject>
+#include "generic.h"
+#include <tuple>
+#include <parcer.h>
+
+class ProtocolStages : public QObject
+{
+    Q_OBJECT
+
+public:
+    ProtocolStages(int selfBroacastPosition = -1, QString broadcastingWord = "", const int& selfDescriptionNumber = 0, const QMap<int, QString>& descriptors_adresses = {}, int numberOfMessages = 0);
+    ProtocolStages(const int& selfDescriptionNumber = 0, const QMap<int, QString>& descriptors_adresses = {}, int numberOfMessages = 0);
+    ~ProtocolStages();
+
+public:
+    void SendSecrets();
+    void MakeXORorNXOR();
+    void GenerateProtocolAnswer();
+
+private:
+    void GenerateSecrets();
+    void IncreaseNumbersOfSecrets();
+    void IncreaseNumberOfXorResults();
+    void ClearReusedElements();
+
+public slots:
+    void FirstProtocolStage();
+    void process_ProtocolStages();
+    void ChangeIsPayerValue(bool state);
+    void CatchMissingSecrets(int descriptor, int side_secrets);
+    void CatchOthersXORorNXOR(int sender_descriptor, int xOrNx_res);
+    void NewProtocolCycle(int result);
+
+signals:
+    void finished_PSMaker();
+    void sendSecrets(QVector<int>);
+    void sendXORorNXOR_Result(QString);
+    void sendProtocolAnswer(QString);
+    void allSecretsWasGained();
+    void allXorResultsWasGained();
+    void gotMainProtocolAnswer(int);
+    void gotAnswerWord(QString);
+
+private:    
+    QMap<int, QString> descriptors_adresses;
+    QVector<int> secrets;
+    QVector<int> xorNxorResults;
+
+    int selfDescriptionNumber = -1;
+
+    int bitNumOfCurrentWord = 0;
+    int currentNumOfWord = 0;
+    int selfBroadcastPosition = -1;
+    int numberOfMessages = 0;
+
+    bool isPayer = false;
+
+    QString broadCastingWord;
+    QString answerBuffer;
+
+    int current_num_of_secrets = 0;
+    int current_side_xor_results = 0;
+
+    Parcer parce;
+
+    int i = 0;
+};
+
+#endif // PROTOCOLSTAGES_H

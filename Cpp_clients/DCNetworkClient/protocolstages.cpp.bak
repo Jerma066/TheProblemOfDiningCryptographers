@@ -1,0 +1,208 @@
+﻿#include "protocolstages.h"
+
+
+
+ProtocolStages::ProtocolStages(int sBcastPos, QString bCastingWord, const int &selfDescriptionNumber, const QMap<int, QString> &descriptors_adresses, int numOfMes)
+{
+    this->selfDescriptionNumber = selfDescriptionNumber;
+    this->descriptors_adresses = descriptors_adresses;
+    this->broadCastingWord = bCastingWord;
+    this->selfBroadcastPosition = sBcastPos;
+    this->numberOfMessages = numOfMes;
+
+    xorNxorResults.resize(descriptors_adresses.size());
+    qDebug() << selfDescriptionNumber << " " << descriptors_adresses << " " << broadCastingWord << " " << sBcastPos;
+}
+
+ProtocolStages::ProtocolStages(const int &selfDescriptionNumber, const QMap<int, QString> &descriptors_adresses, int numOfMes)
+{
+    this->selfDescriptionNumber = selfDescriptionNumber;
+    this->descriptors_adresses = descriptors_adresses;
+    this->numberOfMessages = numOfMes;
+
+    xorNxorResults.resize(descriptors_adresses.size());
+    qDebug() << selfDescriptionNumber << " " << descriptors_adresses;
+}
+
+ProtocolStages::~ProtocolStages()
+{
+    qDebug() << "ProtocolStages: Good bye int thread";
+    emit finished_PSMaker();
+}
+
+void ProtocolStages::process_ProtocolStages()
+{
+    qDebug() << "ProtocolStages: Start working in Thread";
+}
+
+void ProtocolStages::ChangeIsPayerValue(bool state)
+{
+    isPayer = state;
+}
+
+void ProtocolStages::FirstProtocolStage()
+{
+    if(currentNumOfWord == selfBroadcastPosition){
+        if(broadCastingWord.at(0) == '1'){
+            ChangeIsPayerValue(true);
+        }
+        else{
+            ChangeIsPayerValue(false);
+        }
+    }
+    bitNumOfCurrentWord++;
+
+    this->SendSecrets();
+}
+
+//-----Генерация и отправка секретов----------------//
+static int randomBetween(int low, int high)
+{
+    return (qrand() % ((high + 1) - low) + low);
+}
+
+void ProtocolStages::GenerateSecrets()
+{
+    secrets.resize(descriptors_adresses.size());
+
+    for (int i = selfDescriptionNumber + 1; i < descriptors_adresses.size(); i++) {
+        secrets[i] = (randomBetween(0,1));
+    }
+}
+
+void ProtocolStages::SendSecrets()
+{
+    GenerateSecrets();
+    sendSecrets(secrets);
+
+    for (int i = selfDescriptionNumber + 1; i < descriptors_adresses.size(); i++) {
+        this->IncreaseNumbersOfSecrets();
+    }
+}
+//--------------------------------------------------//
+//-----Получение сторонних секретов-----------------//
+void ProtocolStages::CatchMissingSecrets(int descriptor, int side_secrets)
+{
+    secrets[descriptor] = side_secrets;
+    this->IncreaseNumbersOfSecrets();
+}
+
+//Изменение количества секретов
+void ProtocolStages::IncreaseNumbersOfSecrets()
+{
+    current_num_of_secrets++;
+
+    if(current_num_of_secrets == descriptors_adresses.size() - 1){
+        emit allSecretsWasGained();
+        this->MakeXORorNXOR();
+    }
+}
+//--------------------------------------------------//
+//-----Выполнение и отправка XOR или ~XOR рез-в-----//
+void ProtocolStages::MakeXORorNXOR()
+{
+    int result = 0;
+    bool res;
+    QString answer = "3141 ";
+    for (int i = 0; i < descriptors_adresses.size(); i++) {
+        if(i != selfDescriptionNumber){
+            result += secrets[i];
+        }
+    }
+
+    result %= 2;
+
+    if(isPayer){
+        res = !static_cast<bool>(result);
+    }
+    else {
+        res = static_cast<bool>(result);
+    }
+
+    result = static_cast<int>(res);
+    xorNxorResults[selfDescriptionNumber] = result;
+    this->IncreaseNumberOfXorResults();
+
+    answer += QString::number(result);
+    emit sendXORorNXOR_Result(answer);
+}
+//--------------------------------------------------//
+//-----Получение чужих XOR/NXOR результатов---------//
+void ProtocolStages::CatchOthersXORorNXOR(int sender_descriptor, int xOrNx_res)
+{
+    xorNxorResults[sender_descriptor] = xOrNx_res;
+    this->IncreaseNumberOfXorResults();
+}
+
+//--------------------------------------------------//
+//-----Получение ответа об оплате счета-------------//
+void ProtocolStages::GenerateProtocolAnswer(){
+    int result = 0;
+
+    for (auto it = xorNxorResults.begin(); it != xorNxorResults.end(); it++) {
+        result += *it;
+    }
+    result %= 2;
+    emit gotMainProtocolAnswer(result);
+
+    if(currentNumOfWord <= numberOfMessages){
+        this->NewProtocolCycle(result);
+    }
+}
+
+//Новый цикл протокола
+void ProtocolStages::NewProtocolCycle(int result){
+    answerBuffer.push_back(QString::number(result));                    //помещаем полученный бит в буфер
+
+    if(answerBuffer.size() >= 6){
+        QString current_end = answerBuffer.right(5);
+        if(current_end == "00000"){                                    //проверим буффер на наличие символа конца слова
+            QString answer = parce.decode(answerBuffer);                //Декодируем ответ
+            gotAnswerWord(answer);                                      //Отправляем ответ
+            answerBuffer.clear();                                       //Очищаем буффер слова
+            currentNumOfWord++;                                         //Увеличиваем счетчик номера получаемого слова
+            bitNumOfCurrentWord = 0;                                    //Обнуляем номер отправляемого бита
+        }
+    }
+
+    if(currentNumOfWord == selfBroadcastPosition){
+        if(broadCastingWord[bitNumOfCurrentWord] == '1'){
+            isPayer = true;
+        }
+        else{
+            isPayer = false;
+        }
+    }
+    else{
+        isPayer = false;
+    }
+
+    bitNumOfCurrentWord++;
+
+    this->ClearReusedElements();
+    this->SendSecrets();
+}
+
+//Изменение количества сторонних XOR результатов
+void ProtocolStages::IncreaseNumberOfXorResults()
+{
+    current_side_xor_results++;
+
+    if(current_side_xor_results == descriptors_adresses.size()){
+        emit allXorResultsWasGained();
+        this->GenerateProtocolAnswer();
+    }
+}
+
+//Очищение переиспользуемых ресурсов
+void ProtocolStages::ClearReusedElements()
+{
+    current_num_of_secrets = 0;
+    current_side_xor_results = 0;
+
+    secrets.clear();
+    xorNxorResults.clear();
+
+    secrets.resize(descriptors_adresses.size());
+    xorNxorResults.resize(descriptors_adresses.size());
+}
