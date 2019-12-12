@@ -114,9 +114,7 @@ void ProtocolStages::GenerateProtocolAnswer(){
     for (auto it = xorNxorResults.begin(); it != xorNxorResults.end(); it++) {
         result += *it;
     }
-
     result %= 2;
-
     gotMainProtocolAnswer(result);
 }
 
