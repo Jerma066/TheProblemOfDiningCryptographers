@@ -120,15 +120,10 @@ void TcpSocketWriter::GetNumbers()
     }
 }
 
-void TcpSocketWriter::ProcessWritingMessage(QString message)
+void TcpSocketWriter::ProcessWritingMessage(int xorNxor)
 {
-    QString command_code = message.left(message.indexOf(' '));
-
-    switch (command_code.toInt()) {
-    case 3141:{
-        BroadcastMessage(message);
-    }
-    }
+    QString message =  "3141 " + QString::number(xorNxor);
+    BroadcastMessage(message);
 }
 
 void TcpSocketWriter::SecretsFrindlyBroadcast(QVector<int> secrets)

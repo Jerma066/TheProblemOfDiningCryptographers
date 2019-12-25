@@ -23,7 +23,11 @@ public slots:
     void NewUser();
     void ReadFromSocket();
     void Process_Message(QString data);
+    void SetConnectionParameters(QPair<QString, quint16>, QPair<QString, quint16>);
     QString ConvertFromIPv6ToIpv4(QHostAddress address);
+
+private:
+    bool isInAddressesMap(QString);
 
 signals:
     void finished_SocketReader();
@@ -41,6 +45,7 @@ private:
     QByteArray data;
     bool server_status;
     QMap<qlonglong, QTcpSocket*> SockClients;
+    QPair<QString, quint16> serverSocket;
 
     //Атрибуты сервера
     QHostAddress host = QHostAddress::Any;

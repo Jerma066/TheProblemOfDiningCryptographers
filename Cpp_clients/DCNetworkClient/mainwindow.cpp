@@ -79,6 +79,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->set_of_conButton, SIGNAL(clicked()), SettingsDialogNew, SLOT(showSettingsDialog()));           //Вызов окна по нажатию кнопки
     connect(SettingsDialogNew, SIGNAL(setConnectionParameters(QPair<QString, quint16>, QPair<QString, quint16>)),
             SocketWriter, SLOT(SetConnectionParameters(QPair<QString, quint16>, QPair<QString, quint16>)));
+
+    connect(SettingsDialogNew, SIGNAL(setConnectionParameters(QPair<QString, quint16>, QPair<QString, quint16>)),
+            SocketReader, SLOT(SetConnectionParameters(QPair<QString, quint16>, QPair<QString, quint16>)));
+
     connect(SettingsDialogNew, SIGNAL(broadcastingSignal(bool)), SocketWriter, SLOT(ChangeStateOfBroacasting(bool)));
     connect(SettingsDialogNew, SIGNAL(broadcastingSignal(bool)), this, SLOT(ChangeStateOfBroacasting(bool)));
     connect(SettingsDialogNew, SIGNAL(gotEncodeBinWord(QString)), this, SLOT(CatchBroadcastingWord(QString)));
@@ -99,7 +103,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(PSMaker, SIGNAL(sendSecrets(QVector<int>)), SocketWriter, SLOT(SecretsFrindlyBroadcast(QVector<int>)));
     connect(PSMaker, SIGNAL(sendProtocolAnswer(QString)), SocketWriter, SLOT(ProcessWritingMessage(QString)));
-    connect(PSMaker, SIGNAL(sendXORorNXOR_Result(QString)), SocketWriter, SLOT(ProcessWritingMessage(QString)));
+    connect(PSMaker, SIGNAL(sendXORorNXOR_Result(int)), SocketWriter, SLOT(ProcessWritingMessage(int)));
 
     //Получение стороннего секрета
     connect(SocketReader, SIGNAL(gotSideSecret(int)), PSMaker, SLOT(CatchMissingSecrets(int)));
@@ -108,7 +112,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Получении всех секретов
     connect(PSMaker, SIGNAL(allSecretsWasGained()), this, SLOT(CaughtAllSecrets()));
     //Генерация XOR результата
-    connect(PSMaker, SIGNAL(sendXORorNXOR_Result(QString)), this, SLOT(CaughtSelfXorResult(QString)));
+    connect(PSMaker, SIGNAL(sendXORorNXOR_Result(int)), this, SLOT(CaughtSelfXorResult(int)));
     //Получение всех XOR результатов
     connect(PSMaker, SIGNAL(allXorResultsWasGained()), this, SLOT(CaughtAllXorResults()));
     //Получение главного ответа данного протокола
@@ -203,19 +207,10 @@ void MainWindow::CaughtAllSecrets()
     this->isAllSecretsGainned = true;
 }
 
-void MainWindow::CaughtSelfXorResult(QString data)
+void MainWindow::CaughtSelfXorResult(int xorNxor)
 {
-    QString command_code = data.left(data.indexOf(' '));
-    QString command_data = data.mid(data.indexOf( command_code )
-                           + command_code.length() + 1, data.length());
-
-    if(command_code.toInt() == 3141){
-        QString message = "Your generated XOR result is " + command_data;
+  QString message = "Your generated XOR result is " + QString::number(xorNxor);
   //      PrintProtocolStageToTheSreen(message);
-    }
-    else{
-        qDebug() << "Error! Not valid use of this method!";
-    }
 }
 
 void MainWindow::CaughtAllXorResults()

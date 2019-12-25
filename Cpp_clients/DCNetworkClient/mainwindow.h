@@ -28,7 +28,7 @@ public slots:
     void CaughtNumberOfMessages(int);
     void CaughtDescriptionsOfGuests(QMap<int, QString> users_descriptions);
     void CaughtAllSecrets();
-    void CaughtSelfXorResult(QString);
+    void CaughtSelfXorResult(int);
     void CaughtAllXorResults();
     void CaughtProtocolAnswer(int answer);
     void PrintInfoToTheSreen(QString text);

@@ -29,7 +29,7 @@ public slots:
     void CaughtSelfDescriptionNumber(int);
     void CaughtSelfBroadcastNumber(int);
     void CaughtDescriptionsOfGuests(QMap<int, QString> users_descriptions);
-    void ProcessWritingMessage(QString message);
+    void ProcessWritingMessage(int xorNxor);
     void ChangeStateOfBroacasting(bool state);
 
 private slots:

@@ -111,7 +111,6 @@ void ProtocolStages::MakeXORorNXOR()
     qDebug() << "Making XORorNXOR begins.";
     int result = 0;
     bool res;
-    QString answer = "3141 ";
 
     for(auto it = sendable_secrets.begin(); it != sendable_secrets.end(); it++){
         result += *it;
@@ -133,9 +132,7 @@ void ProtocolStages::MakeXORorNXOR()
     qDebug() << "isPayer: " << isPayer << ", result(of (N)XOR) = " << result;
 
     xorNxorResults.push_back(result);
-    answer += QString::number(result);
-
-    emit sendXORorNXOR_Result(answer);
+    emit sendXORorNXOR_Result(result);
 
     while (1) {
         if(xorNxorResults.size() == descriptors_adresses.size()){

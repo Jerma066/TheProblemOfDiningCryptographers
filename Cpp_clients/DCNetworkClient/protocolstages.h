@@ -42,7 +42,7 @@ public slots:
 signals:
     void finished_PSMaker();
     void sendSecrets(QVector<int>);
-    void sendXORorNXOR_Result(QString);
+    void sendXORorNXOR_Result(int);
     void sendProtocolAnswer(QString);
     void allSecretsWasGained();
     void allXorResultsWasGained();
