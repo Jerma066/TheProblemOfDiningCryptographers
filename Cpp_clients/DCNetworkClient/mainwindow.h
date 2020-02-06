@@ -40,9 +40,12 @@ public slots:
     void writeLine();
     void EndOfProtocolStrPrint();
 
-private slots:
-
 signals:
+    void startProtocolSignal();
+    void resetProtocolSignal();
+
+private slots:
+    void on_startProtocolButton_clicked();
 
 private:
     Ui::MainWindow *ui;

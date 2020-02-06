@@ -39,6 +39,8 @@ public slots:
     void ChangeIsPayerValue(bool state);
     void NewProtocolCycle(int result);
 
+    void Reset();
+
 signals:
     void finished_PSMaker();
     void sendSecrets(QVector<int>);
@@ -65,10 +67,10 @@ private:
     int selfBroadcastPosition = -1;
     int numberOfMessages = 0;
     int num_of_round_answers = 0;
-    int current_result;
+    int current_result =-1;
 
     bool isPayer = false;
-
+    bool beReseted = false;
     bool allAnswersGaibed = false;
 
     QString broadCastingWord;

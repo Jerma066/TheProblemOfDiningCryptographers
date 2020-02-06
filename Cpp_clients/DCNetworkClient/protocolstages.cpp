@@ -137,7 +137,7 @@ void ProtocolStages::MakeXORorNXOR()
 
     emit sendXORorNXOR_Result(answer);
 
-    while (1) {
+    while(!beReseted) {
         if(xorNxorResults.size() == descriptors_adresses.size()){
             emit allXorResultsWasGained();
             break;
@@ -145,8 +145,12 @@ void ProtocolStages::MakeXORorNXOR()
         QGuiApplication::processEvents();
     }
 
-    qDebug() << "Making XORorNXOR ends.";
-    this->GenerateProtocolAnswer();
+    if(!beReseted){
+        qDebug() << "Making XORorNXOR ends.";
+        this->GenerateProtocolAnswer();
+    }
+
+    beReseted = false;
 }
 
 void ProtocolStages::CatchOthersXORorNXOR(int xOrNx_res)
@@ -168,7 +172,7 @@ void ProtocolStages::GenerateProtocolAnswer(){
     this->ClearReusedElements();
     emit gotMainProtocolAnswer(result);
 
-    while (1) {
+    while(!beReseted) {
         if(num_of_round_answers == descriptors_adresses.size() - 1){
             emit allRoundResultsWasGained();
             break;
@@ -224,6 +228,30 @@ void ProtocolStages::NewProtocolCycle(int result){
 
     this->SendSecrets();
     qDebug() << "New protocol cycle ends";
+}
+
+void ProtocolStages::Reset()
+{
+    beReseted = true;
+
+    descriptors_adresses.clear();
+    received_secrets.clear();
+    sendable_secrets.clear();
+    xorNxorResults.clear();
+
+    selfDescriptionNumber = -1;
+
+    bitNumOfCurrentWord = 0;
+    currentNumOfWord = 0;
+    selfBroadcastPosition = -1;
+    numberOfMessages = 0;
+    num_of_round_answers = 0;
+    current_result =-1;
+    isPayer = false;
+    allAnswersGaibed = false;
+
+    broadCastingWord = "";
+    answerBuffer = "";
 }
 
 //Очищение переиспользуемых ресурсов

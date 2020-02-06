@@ -41,15 +41,18 @@ private slots:
     void BroadcastMessage(QString message);
     void ProtocolAnswerBroadcastMessage(int answer);
 
+    void Reset();
+
 public:
     void delay(int millisecondsToWait);
 
 private:
     QTcpSocket *socket;
     bool haveNumbers = false;
+    bool beReseted = false;
     bool haveBroadcastNumber = false;
     bool haveAddressesMap = false;
-    int selfDescriptionNumber;
+    int selfDescriptionNumber = -1;
     int broadecastingNumber = -1;
     bool stateOfBroadcasting = false;
     QPair<QString, quint16> serverSocket;

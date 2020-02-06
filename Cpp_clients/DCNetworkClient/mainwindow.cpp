@@ -140,8 +140,11 @@ MainWindow::MainWindow(QWidget *parent) :
     thread_ProtocolStages->start();
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-    connect(ui->startProtocolButton, SIGNAL(clicked()), SocketWriter,   SLOT(GetNumbers()));                   //Запуск протокола начинается с
-                                                                                                               //запроса номера от сервера
+    connect(this, SIGNAL(startProtocolSignal()), SocketWriter,   SLOT(GetNumbers()));                //Запуск протокола
+
+    connect(this, SIGNAL(resetProtocolSignal()), SocketWriter, SLOT(Reset()));                       //Сброс протокола
+    connect(this, SIGNAL(resetProtocolSignal()), SocketReader, SLOT(Reset()));
+    connect(this, SIGNAL(resetProtocolSignal()), PSMaker, SLOT(Reset()));
 }
 
 MainWindow::~MainWindow()
@@ -211,7 +214,7 @@ void MainWindow::CaughtSelfXorResult(QString data)
 
     if(command_code.toInt() == 3141){
         QString message = "Your generated XOR result is " + command_data;
-  //      PrintProtocolStageToTheSreen(message);
+        //PrintProtocolStageToTheSreen(message);
     }
     else{
         qDebug() << "Error! Not valid use of this method!";
@@ -228,7 +231,7 @@ void MainWindow::CaughtAllXorResults()
 void MainWindow::CaughtProtocolAnswer(int answer){
     if(answer){
         QString friend_scenario = " 1";
-      //  PrintProtocolStageToTheSreen(friend_scenario);
+        //PrintProtocolStageToTheSreen(friend_scenario);
     }
     else {
         QString job_scenario = " 0";
@@ -245,6 +248,18 @@ void MainWindow::CatchBroadcastingWord(QString word){
 void MainWindow::ChangeStateOfBroacasting(bool state)
 {
     this->stateOfBroacasting = state;
+}
+
+void MainWindow::on_startProtocolButton_clicked()
+{
+    if(ui->startProtocolButton->text() == "Start Protocol"){
+        ui->startProtocolButton->setText("Reset");
+        emit startProtocolSignal();
+    }
+    else if(ui->startProtocolButton->text() == "Reset"){
+        ui->startProtocolButton->setText("Start Protocol");
+        emit resetProtocolSignal();
+    }
 }
 
 
@@ -269,3 +284,5 @@ void MainWindow::EndOfProtocolStrPrint()
 {
     PrintProtocolStageToTheSreen("Программа завершилась с кодом 0 ...");
 }
+
+

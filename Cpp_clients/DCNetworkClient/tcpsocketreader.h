@@ -25,6 +25,8 @@ public slots:
     void Process_Message(QString data);
     QString ConvertFromIPv6ToIpv4(QHostAddress address);
 
+    void Reset();
+
 signals:
     void finished_SocketReader();
     void outSocket(QString sended_data);

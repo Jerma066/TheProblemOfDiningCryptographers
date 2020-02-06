@@ -41,8 +41,9 @@ bool TcpSocketWriter::writeData(QByteArray data)
         socket->write(data);                        // Запись самых данных непосредственно
         return socket->waitForBytesWritten();
     }
-    else
+    else{
         return false;
+    }
 }
 
 bool TcpSocketWriter::writeDataToUser(QString host, quint16 port, QString data)
@@ -98,10 +99,11 @@ void TcpSocketWriter::CaughtDescriptionsOfGuests(QMap<int, QString> users_descri
 
 void TcpSocketWriter::GetNumbers()
 {
+
     auto host = serverSocket.first;
     auto port = serverSocket.second;
 
-    while(!haveNumbers){
+    while(!haveNumbers && !beReseted){
         connectToUser(host, port);
 
         if(stateOfBroadcasting){
@@ -118,6 +120,8 @@ void TcpSocketWriter::GetNumbers()
 
         delay(150);
     }
+
+    beReseted = false;
 }
 
 void TcpSocketWriter::ProcessWritingMessage(QString message)
@@ -144,6 +148,20 @@ void TcpSocketWriter::ProtocolAnswerBroadcastMessage(int answer)
 {
     QString message = "3142 " + QString::number(answer);
     BroadcastMessage(message);
+}
+
+void TcpSocketWriter::Reset()
+{
+    beReseted = true;
+
+    qDebug() << "Reset!";
+    haveNumbers = false;
+    haveBroadcastNumber = false;
+    haveAddressesMap = false;
+    selfDescriptionNumber = -1;
+    broadecastingNumber = -1;
+    stateOfBroadcasting = false;
+    descriptors_adresses.clear();
 }
 
 void TcpSocketWriter::BroadcastMessage(QString message)

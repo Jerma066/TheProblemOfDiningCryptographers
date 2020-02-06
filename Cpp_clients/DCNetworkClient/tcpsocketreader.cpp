@@ -42,6 +42,16 @@ QString TcpSocketReader::ConvertFromIPv6ToIpv4(QHostAddress address)
     return ip4String;
 }
 
+void TcpSocketReader::Reset()
+{
+    data.clear();
+    SockClients.clear();
+
+    clientHaveNumber = false;
+    adresses_descriptions.clear();
+    currentSenderIPv4Addr = "";
+}
+
 void TcpSocketReader::NewUser()
 {
     if(server_status == 1){
