@@ -23,7 +23,19 @@ void TransmittedWord::showTransmittedWordDialog()
 void TransmittedWord::on_okButton_clicked()
 {
     QString data = ui->wordLineEdit->text();
-    gotTransmittedWord(data);
 
-    this->hide();
+    if(IsBinaryOnly(data)){
+        gotTransmittedWord(data);
+        this->hide();
+    }
+}
+
+// Функции
+bool IsBinaryOnly(QString str){
+    foreach(QChar c, str){
+        if(c < '0' || c > '1')
+            return false;
+    }
+
+    return true;
 }

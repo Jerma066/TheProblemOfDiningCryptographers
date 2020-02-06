@@ -29,4 +29,6 @@ private:
     Ui::TransmittedWord *ui;
 };
 
+bool IsBinaryOnly(QString str);
+
 #endif // TRANSMITTEDWORD_H
