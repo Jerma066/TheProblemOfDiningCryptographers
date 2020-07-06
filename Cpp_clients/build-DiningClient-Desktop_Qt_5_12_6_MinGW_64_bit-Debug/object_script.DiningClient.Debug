@@ -1,0 +1,16 @@
+debug/logterminal.o
+debug/main.o
+debug/mainwindow.o
+debug/parcer.o
+debug/protocolstages.o
+debug/settingsdialog.o
+debug/tcpsocketreader.o
+debug/tcpsocketwriter.o
+debug/transmittedword.o
+debug/moc_logterminal.o
+debug/moc_mainwindow.o
+debug/moc_protocolstages.o
+debug/moc_settingsdialog.o
+debug/moc_tcpsocketreader.o
+debug/moc_tcpsocketwriter.o
+debug/moc_transmittedword.o

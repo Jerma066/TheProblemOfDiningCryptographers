@@ -99,6 +99,9 @@ void TcpSocketWriter::CaughtDescriptionsOfGuests(QMap<int, QString> users_descri
 
 void TcpSocketWriter::GetNumbers()
 {
+    qDebug() << "Nusrik sosyamba!";
+
+    beReseted = false;
 
     auto host = serverSocket.first;
     auto port = serverSocket.second;
@@ -120,8 +123,6 @@ void TcpSocketWriter::GetNumbers()
 
         delay(150);
     }
-
-    beReseted = false;
 }
 
 void TcpSocketWriter::ProcessWritingMessage(QString message)
